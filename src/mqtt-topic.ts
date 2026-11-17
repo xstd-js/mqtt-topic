@@ -9,7 +9,7 @@ import { topicPatternToRexExp } from './functions.private/topic-pattern-to-rex-e
  * @example
  * ```ts
  * const topic = new MqttTopic('test/#');
- * topic.matches('test'); // false
+ * topic.matches('test'); // true
  * topic.matches('test/topic'); // true
  * topic.matches('test/topic/subtopic'); // true
  * topic.matches('abc'); // false
