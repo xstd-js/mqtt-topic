@@ -31,41 +31,40 @@ topic.matches('test/topic'); // true
 topic.matches('test/topic/subtopic'); // true
 topic.matches('abc'); // false
 ```
-  
+
 ## 📜 Documentation
 
-  
 ```ts
 /**
  * Represents an MQTT topic with support for wildcard pattern matching.
  *
  * This class encapsulates the functionality to work with MQTT topic strings,
  * including matching topics against patterns using MQTT wildcard syntax.
-  */
+ */
 declare class MqttTopic {
   constructor(value: string);
-  
+
   /**
-  * Returns the topic.
-  */
+   * Returns the topic.
+   */
   get value(): string;
-  
+
   /**
-  * Returns true if the topic matches the pattern.
-  *
-  * @param topic - The topic to test.
-  * @returns {boolean} Returns true if the topic matches the pattern.
-  */
+   * Returns true if the topic matches the pattern.
+   *
+   * @param topic - The topic to test.
+   * @returns {boolean} Returns true if the topic matches the pattern.
+   */
   matches(topic: string): boolean;
-  
+
   /**
-  * Returns the topic.
-  */
+   * Returns the topic.
+   */
   toString(): string;
-  
+
   /**
-  * Returns the topic.
-  */
+   * Returns the topic.
+   */
   valueOf(): string;
 }
 ```
