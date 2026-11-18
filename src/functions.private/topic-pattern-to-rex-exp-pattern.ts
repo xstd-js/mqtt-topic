@@ -1,5 +1,14 @@
-// https://www.hivemq.com/blog/mqtt-essentials-part-5-mqtt-topics-best-practices/
-
+/**
+ * Converts an MQTT topic pattern into the source of an anchored `RegExp` (wrapped between `^` and `$`).
+ *
+ * - RegExp special characters are escaped
+ * - `+` is replaced by `([^\/]*)`: exactly one level, possibly empty (spec §4.7.1.3)
+ * - a trailing `#` is replaced by an optional `.*` group, so the parent level matches too (spec §4.7.1.2)
+ *
+ * @param topicPattern - The MQTT topic pattern to convert.
+ * @returns The RegExp source matching every topic accepted by `topicPattern`.
+ * @see https://www.hivemq.com/blog/mqtt-essentials-part-5-mqtt-topics-best-practices/
+ */
 export function topicPatternToRexExpPattern(topicPattern: string): string {
   return (
     '^' +

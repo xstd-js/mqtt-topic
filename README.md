@@ -12,7 +12,20 @@
 
 ## @xstd/mqtt-topic
 
-A class to handle MQTT topics with support for wildcard pattern matching.
+A TypeScript class to handle MQTT topics with support for wildcard pattern matching.
+
+An `MqttTopic` wraps a topic pattern (e.g. `'sport/+/player1'` or `'sport/#'`) and compiles it into a `RegExp` once at construction. `matches` then tests concrete topics against this pattern.
+
+### 🃏 Wildcards
+
+The pattern supports the two MQTT wildcards:
+
+| Wildcard | Name         | Matches                                                                      | Example                                       | Spec     |
+| -------- | ------------ | ---------------------------------------------------------------------------- | --------------------------------------------- | -------- |
+| `+`      | single level | exactly one level, which may be empty                                        | `sport/+` matches `sport/` and `sport/tennis` | §4.7.1.3 |
+| `#`      | multi level  | the parent level and any number of child levels (must be the last character) | `sport/#` matches `sport` and `sport/tennis`  | §4.7.1.2 |
+
+> Learn more in the [MQTT specification §4.7](https://docs.oasis-open.org/mqtt/mqtt/v5.0/os/mqtt-v5.0-os.html) or [MQTT Essentials Part 5](https://www.hivemq.com/blog/mqtt-essentials-part-5-mqtt-topics-best-practices/).
 
 ## 📦 Installation
 
@@ -25,6 +38,8 @@ npm install @xstd/mqtt-topic --save
 ## 💡 Example
 
 ```ts
+import { MqttTopic } from '@xstd/mqtt-topic';
+
 const topic = new MqttTopic('test/#');
 topic.matches('test'); // true
 topic.matches('test/topic'); // true
@@ -32,39 +47,27 @@ topic.matches('test/topic/subtopic'); // true
 topic.matches('abc'); // false
 ```
 
+```ts
+// `+` matches exactly one level, possibly empty (spec §4.7.1.3)
+const singleLevel = new MqttTopic('sport/+');
+singleLevel.matches('sport/'); // true
+singleLevel.matches('sport/tennis'); // false
+
+// `#` matches the parent level and any number of child levels (spec §4.7.1.2)
+const multiLevel = new MqttTopic('sport/#');
+multiLevel.matches('sport'); // true
+multiLevel.matches('sport/tennis/player1'); // true
+```
+
 ## 📜 Documentation
 
-```ts
-/**
- * Represents an MQTT topic with support for wildcard pattern matching.
- *
- * This class encapsulates the functionality to work with MQTT topic strings,
- * including matching topics against patterns using MQTT wildcard syntax.
- */
-declare class MqttTopic {
-  constructor(value: string);
+### `MqttTopic`
 
-  /**
-   * Returns the topic.
-   */
-  get value(): string;
+| Member                            | Description                                                                                                                           |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `new MqttTopic(pattern: string)`  | Creates an `MqttTopic` from a topic pattern, with or without wildcards. The pattern is compiled into a `RegExp` once at construction. |
+| `value: string`                   | Returns the topic pattern.                                                                                                            |
+| `matches(topic: string): boolean` | Returns `true` if `topic` matches the pattern, using the wildcards described above.                                                   |
+| `toString()` / `valueOf()`        | Return the topic pattern (same as `value`).                                                                                           |
 
-  /**
-   * Returns true if the topic matches the pattern.
-   *
-   * @param topic - The topic to test.
-   * @returns {boolean} Returns true if the topic matches the pattern.
-   */
-  matches(topic: string): boolean;
-
-  /**
-   * Returns the topic.
-   */
-  toString(): string;
-
-  /**
-   * Returns the topic.
-   */
-  valueOf(): string;
-}
-```
+> Each member is fully documented and illustrated in its JSDoc comments, visible on hover in your IDE.
